@@ -24,12 +24,12 @@ def minmax_normalizer(df):
 #   interventions = itertools.product(*unique_vals)
 #   for intervention in interventions:
 
-def build_plot(P, A, R, S, G, L, F,
-               hist_fya_pred=False,
-               colors=None,
-               pc_samps=1000,
-               figscale=2,
-               fontsize=20):
+def hist_ability_by_policy(P, A, R, S, G, L, F,
+                           hist_fya_pred=False,
+                           colors=None,
+                           pc_samps=1000,
+                           figscale=2,
+                           fontsize=20):
   if colors is None: colors = default_colors
   gs = GridSpec(3, 4)
   gs.update(wspace=0, hspace=0)

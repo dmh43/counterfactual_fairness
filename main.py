@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from cff.policies import NaivePolicy, UnawarePolicy, FairPolicy
 from cff.sim import simulate_exogenous_vars, simulate_endogenous_vars
-from cff.ds_helpers import build_plot
+from cff.ds_helpers import hist_ability_by_policy
 
 def main():
   # generate some data
@@ -29,8 +29,8 @@ def main():
        'unaware': unawarePolicy.evaluate(G, L, nb_seats),
        'fair': fairPolicy.evaluate(R, S, G, L, nb_seats)}
 
-  build_plot(P['naive'], A, R, S, G, L, F)
-  build_plot(P['unaware'], A, R, S, G, L, F)
-  build_plot(P['fair'], A, R, S, G, L, F)
+  hist_ability_by_policy(P['naive'], A, R, S, G, L, F)
+  hist_ability_by_policy(P['unaware'], A, R, S, G, L, F)
+  hist_ability_by_policy(P['fair'], A, R, S, G, L, F)
 
 if __name__ == "__main__": main()
