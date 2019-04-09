@@ -1,5 +1,10 @@
 * Counterfactual fairness
 Main ideas from:
+
 [1]	M. J. Kusner, J. R. Loftus, C. Russell, and R. Silva, “Counterfactual Fairness.” pp. 1–21, 20-Mar-2017.
+
 [2]	“The Blessings of Multiple Causes,” pp. 1–59, Jun. 2018.
-[3]	https://github.com/apedawi-cs/Causal-inference-discussion/blob/master/law_school.ipynb
+
+[3]	R. Ranganath and A. Perotte, “Multiple Causal Inference with Latent Confounding,” arXiv.org, vol. stat.ML. 21-May-2018.
+
+Whole sections of code taken from: https://github.com/apedawi-cs/Causal-inference-discussion/blob/master/law_school.ipynb
