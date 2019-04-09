@@ -24,6 +24,9 @@ def get_intervention_sets(*protected_attrs: List[np.ndarray]):
   unique_vals = (np.unique(attr) for attr in protected_attrs)
   return list(itertools.product(*unique_vals))
 
+def calc_utility(P, ranking, nb_seats):
+  return np.mean(P[ranking[:nb_seats]])
+
 def kde_ability_by_protected(P, A, R, S, G, L, F,
                              hist_fya_pred=False,
                              colors=None,
