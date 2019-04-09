@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from cff.policies import NaivePolicy, UnawarePolicy, FairPolicy
 from cff.sim import simulate_exogenous_vars, simulate_endogenous_vars
-from cff.ds_helpers import hist_ability_by_policy
+from cff.ds_helpers import hist_ability_by_policy, kde_ability_by_protected
 
 def main():
   # generate some data
@@ -32,5 +32,9 @@ def main():
   hist_ability_by_policy(P['naive'], A, R, S, G, L, F)
   hist_ability_by_policy(P['unaware'], A, R, S, G, L, F)
   hist_ability_by_policy(P['fair'], A, R, S, G, L, F)
+
+  kde_ability_by_protected(P['naive'], A, R, S, G, L, F)
+  kde_ability_by_protected(P['unaware'], A, R, S, G, L, F)
+  kde_ability_by_protected(P['fair'], A, R, S, G, L, F)
 
 if __name__ == "__main__": main()

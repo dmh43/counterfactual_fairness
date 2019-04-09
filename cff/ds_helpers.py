@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.gridspec import GridSpec
 from scipy.stats import ttest_ind
+import seaborn as sns
 
 default_colors = {
   (0, 0): [(0.882, 0.529, 0.000, 1.000), (1.000, 0.647, 0.000, 0.500)],
@@ -19,10 +20,28 @@ def normalize(x):
 def minmax_normalizer(df):
   return (df - df.min()) / (df.max() - df.min())
 
-# def counterfactual_fairness(P, *protected_attrs: List[np.ndarray]):
-#   unique_vals = (np.unique(attr) for attr in protected_attrs)
-#   interventions = itertools.product(*unique_vals)
-#   for intervention in interventions:
+def get_intervention_sets(*protected_attrs: List[np.ndarray]):
+  unique_vals = (np.unique(attr) for attr in protected_attrs)
+  return list(itertools.product(*unique_vals))
+
+def kde_ability_by_protected(P, A, R, S, G, L, F,
+                             hist_fya_pred=False,
+                             colors=None,
+                             figscale=2,
+                             fontsize=20):
+  if colors is None: colors = default_colors
+  kwargs_hist = dict()
+  kwargs_text = dict(horizontalalignment='left', verticalalignment='top', fontsize=fontsize)
+  fig = plt.figure()
+  ax = fig.add_subplot(111)
+  for i, tup in enumerate(itertools.product([0, 1], [0, 1])):
+    j, k = tup
+    ind = (R == j) & (S == k)
+    if hist_fya_pred:
+      sns.kdeplot(F[ind & P], label='R={0:}, S={1:}'.format(j, k))
+    else:
+      sns.kdeplot(A[ind & P], label='R={0:}, S={1:}'.format(j, k))
+  return fig
 
 def hist_ability_by_policy(P, A, R, S, G, L, F,
                            hist_fya_pred=False,
