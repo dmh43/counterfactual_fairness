@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.linear_model import LinearRegression
 
-from .helpers import normalize
+from .ds_helpers import normalize
 
 class NaivePolicy:
   def __init__(self):

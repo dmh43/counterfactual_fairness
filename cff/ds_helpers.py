@@ -1,14 +1,22 @@
+from typing import List
 import numpy as np
 import itertools
 import matplotlib.pyplot as plt
 import pandas as pd
 from matplotlib.gridspec import GridSpec
+from scipy.stats import ttest_ind
 
 def normalize(x):
   return (x - np.mean(x)) / np.std(x)
 
 def minmax_normalizer(df):
   return (df - df.min()) / (df.max() - df.min())
+
+# def counterfactual_fairness(P, *protected_attrs: List[np.ndarray]):
+#   unique_vals = (np.unique(attr) for attr in protected_attrs)
+#   interventions = itertools.product(*unique_vals)
+#   for intervention in interventions:
+
 
 def build_plot(P, A, R, S, G, L, F, colors=None, pc_samps=1000, figscale=8, fontsize=20):
   if colors is None:
@@ -38,7 +46,8 @@ def build_plot(P, A, R, S, G, L, F, colors=None, pc_samps=1000, figscale=8, font
   ylim = [0, 1.05 * max([ax.get_ylim()[1] for ax in ax_dict.values()])]
   for ax in ax_dict.values(): ax.set_ylim(ylim)
   ax = fig.add_subplot(gs[0:2, 2:])
-  ax.hist([A[P], A[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
+  # ax.hist([A[P], A[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
+  ax.hist([F[P], F[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
   ax.axvline(x=0, ls='dotted', color='black')
   ax.text(0.01, 0.99, 'All', transform=ax.transAxes, **kwargs_text)
   ax.set_yticks([])

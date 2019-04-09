@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 from cff.policies import NaivePolicy, UnawarePolicy, FairPolicy
 from cff.sim import simulate_exogenous_vars, simulate_endogenous_vars
-from cff.helpers import build_plot
+from cff.ds_helpers import build_plot
 
 def main():
   # generate some data
