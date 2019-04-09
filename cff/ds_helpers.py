@@ -6,6 +6,13 @@ import pandas as pd
 from matplotlib.gridspec import GridSpec
 from scipy.stats import ttest_ind
 
+default_colors = {
+  (0, 0): [(0.882, 0.529, 0.000, 1.000), (1.000, 0.647, 0.000, 0.500)],
+  (1, 0): [(0.882, 0.000, 0.000, 1.000), (1.000, 0.000, 0.000, 0.500)],
+  (0, 1): [(0.000, 0.882, 0.000, 1.000), (0.000, 1.000, 0.000, 0.500)],
+  (1, 1): [(0.000, 0.000, 0.882, 1.000), (0.000, 0.000, 1.000, 0.500)]
+}
+
 def normalize(x):
   return (x - np.mean(x)) / np.std(x)
 
@@ -17,20 +24,18 @@ def minmax_normalizer(df):
 #   interventions = itertools.product(*unique_vals)
 #   for intervention in interventions:
 
-
-def build_plot(P, A, R, S, G, L, F, colors=None, pc_samps=1000, figscale=8, fontsize=20):
-  if colors is None:
-    colors = {
-      (0, 0): [(0.882, 0.529, 0.000, 1.000), (1.000, 0.647, 0.000, 0.500)],
-      (1, 0): [(0.882, 0.000, 0.000, 1.000), (1.000, 0.000, 0.000, 0.500)],
-      (0, 1): [(0.000, 0.882, 0.000, 1.000), (0.000, 1.000, 0.000, 0.500)],
-      (1, 1): [(0.000, 0.000, 0.882, 1.000), (0.000, 0.000, 1.000, 0.500)]
-    }
+def build_plot(P, A, R, S, G, L, F,
+               hist_fya_pred=False,
+               colors=None,
+               pc_samps=1000,
+               figscale=2,
+               fontsize=20):
+  if colors is None: colors = default_colors
   gs = GridSpec(3, 4)
   gs.update(wspace=0, hspace=0)
   kwargs_hist = dict(bins=25, histtype='stepfilled', stacked=True)
   kwargs_text = dict(horizontalalignment='left', verticalalignment='top', fontsize=fontsize)
-  fig = plt.figure(figsize=(4 * figscale, 3 * figscale))
+  fig = plt.figure()
   ax_dict = dict()
   for i, tup in enumerate(itertools.product([0, 1], [0, 1])):
     j, k = tup
@@ -46,8 +51,10 @@ def build_plot(P, A, R, S, G, L, F, colors=None, pc_samps=1000, figscale=8, font
   ylim = [0, 1.05 * max([ax.get_ylim()[1] for ax in ax_dict.values()])]
   for ax in ax_dict.values(): ax.set_ylim(ylim)
   ax = fig.add_subplot(gs[0:2, 2:])
-  # ax.hist([A[P], A[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
-  ax.hist([F[P], F[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
+  if hist_fya_pred:
+    ax.hist([F[P], F[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
+  else:
+    ax.hist([A[P], A[~P]], color=['darkgray', 'lightgray'], **kwargs_hist)
   ax.axvline(x=0, ls='dotted', color='black')
   ax.text(0.01, 0.99, 'All', transform=ax.transAxes, **kwargs_text)
   ax.set_yticks([])
@@ -59,8 +66,8 @@ def build_plot(P, A, R, S, G, L, F, colors=None, pc_samps=1000, figscale=8, font
   df = pd.DataFrame({'A': A.flat, 'G': G.flat, 'L': L.flat, 'F': F.flat}, columns=z)
   df = minmax_normalizer(df)
   idx = np.random.choice(range(len(df)), pc_samps)
-  colors = pd.DataFrame({'R': R.flat, 'S': S.flat}, columns=['R', 'S'])\
-    .apply(tuple, axis=1).apply(lambda i: colors[i])
+  colors = pd.DataFrame({'R': R.flat, 'S': S.flat},
+                        columns=['R', 'S']).apply(tuple, axis=1).apply(lambda i: colors[i])
   for i in df.index[idx]:
     color = colors[i][0] if P[i] else colors[i][1]
     alpha = 0.100 if P[i] else 0.008
@@ -78,4 +85,6 @@ def build_plot(P, A, R, S, G, L, F, colors=None, pc_samps=1000, figscale=8, font
     tick.tick1On = False
   for tick in ax.xaxis.get_major_ticks():
     tick.label.set_fontsize(fontsize)
+  fig.set_figheight(3 * figscale)
+  fig.set_figwidth(4 * figscale)
   return fig
